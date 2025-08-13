@@ -4,7 +4,7 @@ const url = "https://kanban-backend-6pkr.onrender.com"
 
 const getAllTasks = async () => {
   console.log("getting tasks...");
-  return axios.get("http://localhost:3001/tasks");
+  return axios.get(`${url}/tasks`);
 };
 
 const createTask = async (newTask: TaskProps) => {
