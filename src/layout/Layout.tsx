@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import Kanban from '@/views/kanban';
 import Sidebar from "@/components/sidebar";
 import Navbar from "@/components/navbar";
 
@@ -10,7 +10,7 @@ export default function MainLayout() {
         <Navbar />
 
         <div className="h-max p-6">
-          <Outlet />
+          <Kanban />
         </div>
       </section>
     </main>

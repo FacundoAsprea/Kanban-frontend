@@ -115,8 +115,8 @@ export default function TaskCreator({ setTasks } : props) {
               className="mt-auto cursor-pointer"
               onClick={() => {
                 createTask(task)
-                .then((taskWasCreated) => {
-                  if (taskWasCreated === "201") {
+                .then((createTaskStatusCode) => {
+                  if (createTaskStatusCode === "201") {
                     toast("Task has been created", {
                       description: date.toLocaleString(),
                       action: {
@@ -126,7 +126,8 @@ export default function TaskCreator({ setTasks } : props) {
                     });
                     setTasks(prevState => [...prevState, task])
                     return
-                  } else if (taskWasCreated === "401") {
+                  } 
+                  else if (createTaskStatusCode === "401") {
                     return toast("Task could not be created", {
                       description: "Duplicateds are not allowed",
                       action: {

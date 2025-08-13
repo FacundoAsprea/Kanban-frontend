@@ -83,7 +83,7 @@ export default function Kanban() {
       <DndContext onDragEnd={handleDragEnd}>
         {loading ? (
           <></>
-        ) : tasks.length > searchQuery.length ? (
+        ) : searchQuery.length > 0 ? (
           //Filtro
           <section className="h-full flex gap-2 max-sm:flex-wrap">
             {status.map((status) => (
