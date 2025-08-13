@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { TaskProps, TaskStatus } from "@/types/globals";
+const url = "https://kanban-backend-6pkr.onrender.com"
 
 const getAllTasks = async () => {
   console.log("getting tasks...");
@@ -15,7 +16,7 @@ const createTask = async (newTask: TaskProps) => {
   }
 
   return axios
-    .post("http://localhost:3001/tasks", newTask)
+    .post(`${url}/tasks`, newTask)
     .then(() => "201")
     .catch((err) => {
       if (err.response.status == 401) {
@@ -27,7 +28,7 @@ const createTask = async (newTask: TaskProps) => {
 
 const deleteTask = async (taskId: string) => {
   return axios
-    .delete(`http://localhost:3001/tasks/${taskId}`)
+    .delete(`${url}/tasks/${taskId}`)
     .then((res) => console.log("res: ", res));
 };
 
@@ -37,7 +38,7 @@ const updateTaskStatus = async (task: TaskProps, status: TaskStatus) => {
     status: status,
   };
   return axios
-    .put(`http://localhost:3001/tasks/${task.taskId}`, modifiedTask)
+    .put(`${url}/tasks/${task.taskId}`, modifiedTask)
     .then((res) => console.log("status modified: ", res));
 };
 
