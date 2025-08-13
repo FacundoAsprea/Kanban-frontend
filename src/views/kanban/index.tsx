@@ -7,6 +7,7 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import TaskCreator from "@/components/task/taskCreator";
 import TaskDisplayer from "./taskDisplayer";
 import Task from "@/components/task";
+import Loader from "@/components/loading";
 
 import { getAllTasks, updateTaskStatus } from "@/services/task.service";
 import type { TaskProps, TaskStatus } from "@/types/globals";
@@ -44,18 +45,26 @@ export default function Kanban() {
 
     if (!over) return;
 
-    const taskId = active.id 
-    const columnStatus = over.id 
+    const taskId = active.id;
+    const columnStatus = over.id;
 
-    console.log("active: ", active)
-    
-    const tasksAfterDrag = tasks.map(task => task.taskId === taskId ? { ...task, status: columnStatus } as TaskProps : task)
-    setTasks(tasksAfterDrag)
-    updateTaskStatus(tasks.find(task => task.taskId === taskId)!, columnStatus as TaskStatus)
+    console.log("active: ", active);
+
+    const tasksAfterDrag = tasks.map((task) =>
+      task.taskId === taskId
+        ? ({ ...task, status: columnStatus } as TaskProps)
+        : task
+    );
+    setTasks(tasksAfterDrag);
+    updateTaskStatus(
+      tasks.find((task) => task.taskId === taskId)!,
+      columnStatus as TaskStatus
+    );
   };
 
   useEffect(() => {
     getAllTasks().then((res) => {
+      console.log("RES: ", res)
       setTasks(res.data);
       setSearchQuery(res.data);
       setLoading(false);
@@ -82,7 +91,9 @@ export default function Kanban() {
       </div>
       <DndContext onDragEnd={handleDragEnd}>
         {loading ? (
-          <></>
+          <section className="h-full flex items-center justify-center">
+            <Loader />
+          </section>
         ) : searchQuery.length > 0 ? (
           //Filtro
           <section className="h-full flex gap-2 max-sm:flex-wrap">
