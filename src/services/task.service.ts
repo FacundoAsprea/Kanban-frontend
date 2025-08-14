@@ -3,12 +3,10 @@ import type { TaskProps, TaskStatus } from "@/types/globals";
 const url = "https://kanban-backend-6pkr.onrender.com"
 
 const getAllTasks = async () => {
-  console.log("getting tasks...");
   return axios.get(`${url}/tasks`);
 };
 
 const createTask = async (newTask: TaskProps) => {
-  console.log("creating tasks...");
   const somethingIsWrong = Object.values(newTask).some((value) => value === "");
 
   if (somethingIsWrong) {

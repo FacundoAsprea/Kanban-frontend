@@ -29,6 +29,12 @@ export default function Task({ task, setTasks, tasksList }: props) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleTaskDeletion = () => {
+    console.log(`Deleting ${task.title}...`);
+    console.log("tasksBeforeRemoving: ", tasksList);
+    console.log(
+      "tasksAfterRemoving: ",
+      tasksList.filter((listedTask) => listedTask.title != task.title)
+    );
     deleteTask(task.taskId!);
     setTasks(tasksList.filter((listedTask) => listedTask.title != task.title));
   };
@@ -51,7 +57,7 @@ export default function Task({ task, setTasks, tasksList }: props) {
           ref={setNodeRef}
           {...listeners}
           {...attributes}
-          className="flex flex-col h-min bg-gradient-to-tr from-[#1d1f20] via-[#1f1f25] to-borderMain border-1 border-borderMain rounded-md p-4 gap-2 cursor-pointer"
+          className="flex flex-col flex-wrap h-min bg-gradient-to-tr from-[#1d1f20] via-[#1f1f25] to-borderMain border-1 border-borderMain rounded-md p-4 gap-2 cursor-pointer"
           onContextMenu={(event) => {
             event.preventDefault();
             setDialogOpen((prevState) => !prevState);
@@ -72,7 +78,7 @@ export default function Task({ task, setTasks, tasksList }: props) {
             <CiCalendar />
             {task.date}
           </span>
-          <span className="text-muted-foreground text-lg wrap-break-word text-start">
+          <span className="text-muted-foreground text-lg break-all text-start">
             {task.title}
           </span>
           <Username username={task.username} />

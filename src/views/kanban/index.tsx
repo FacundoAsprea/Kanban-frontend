@@ -12,7 +12,7 @@ import Loader from "@/components/loading";
 import { getAllTasks, updateTaskStatus } from "@/services/task.service";
 import type { TaskProps, TaskStatus } from "@/types/globals";
 
-const status: { status: TaskStatus; placeholder: string }[] = [
+const status: { status: TaskStatus; placeholder: string }[] = [ //List used for creating the columns
   {
     status: "notStarted",
     placeholder: "Not started",
@@ -38,7 +38,9 @@ const status: { status: TaskStatus; placeholder: string }[] = [
 export default function Kanban() {
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState<TaskProps[]>([]);
-  const [searchQuery, setSearchQuery] = useState<TaskProps[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const filteredTasks = tasks.filter(task => task.title.includes(searchQuery))
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -48,27 +50,31 @@ export default function Kanban() {
     const taskId = active.id;
     const columnStatus = over.id;
 
-    console.log("active: ", active);
-
-    const tasksAfterDrag = tasks.map((task) =>
+    const tasksAfterDrag = tasks.map((task) =>                //List of tasks with the changes applied
       task.taskId === taskId
         ? ({ ...task, status: columnStatus } as TaskProps)
         : task
     );
-    setTasks(tasksAfterDrag);
-    updateTaskStatus(
+    setTasks(tasksAfterDrag);                                 //UI Update
+    updateTaskStatus(                                         //DB Update
       tasks.find((task) => task.taskId === taskId)!,
       columnStatus as TaskStatus
     );
   };
 
+  //Getting the data
   useEffect(() => {
-    getAllTasks().then((res) => {
-      console.log("RES: ", res)
-      setTasks(res.data);
-      setSearchQuery(res.data);
-      setLoading(false);
-    });
+    const backendWaiting = setInterval(() => {
+      getAllTasks()
+      .then((res) => {
+        setTasks(res.data);
+        setLoading(false);
+
+        clearInterval(backendWaiting)
+        console.log("Connection with the backend established");
+      })
+      .catch(() => console.log("Waiting for the backend..."))
+    }, 1000);
   }, []);
 
   return (
@@ -80,13 +86,9 @@ export default function Kanban() {
       <div className="flex justify-between w-full h-full">
         <Input
           className="w-[calc(40%-6px)] min-w-[300px]"
-          placeholder="Search for a specific task..."
+          placeholder="Search for a specific task by its title..."
           type="text"
-          onChange={(event) =>
-            setSearchQuery(
-              tasks.filter((task) => task.title.includes(event.target.value))
-            )
-          }
+          onChange={(event) => setSearchQuery(event.target.value)}
         />
       </div>
       <DndContext onDragEnd={handleDragEnd}>
@@ -94,7 +96,7 @@ export default function Kanban() {
           <section className="h-full flex items-center justify-center">
             <Loader />
           </section>
-        ) : searchQuery.length > 0 ? (
+        ) : searchQuery.length >= 1 ? (
           //Filtro
           <section className="h-full flex gap-2 max-sm:flex-wrap">
             {status.map((status) => (
@@ -102,7 +104,7 @@ export default function Kanban() {
                 type={status.status}
                 placeholder={status.placeholder}
               >
-                {searchQuery
+                {filteredTasks
                   .filter((task) => task.status === status.status)
                   .map((task) => (
                     <Task task={task} setTasks={setTasks} tasksList={tasks} />
@@ -112,7 +114,7 @@ export default function Kanban() {
           </section>
         ) : (
           //Todas las tasks
-          <section className="h-full flex gap-2 max-sm:flex-wrap">
+          <section className="h-full flex gap-2 w-full flex-wrap">
             {status.map((status) => (
               <TaskDisplayer
                 type={status.status}

@@ -24,7 +24,7 @@ export default function TaskDisplayer({ type, placeholder, children }: props) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-min w-full max-w-[18dvw] md:flex-1 rounded-lg p-3 border-1 gap-2 border-[#252525] bg-gradient-to-bl ${color[type]} to-gray`}
+      className={`flex flex-col h-min w-full lg:flex-1/6 rounded-lg p-3 border-1 gap-2 border-[#252525] bg-gradient-to-bl ${color[type]} to-gray`}
     >
       <span className="text-muted-foreground text-sm">{placeholder}</span>
       <div className="h-max w-full flex flex-col gap-3">
