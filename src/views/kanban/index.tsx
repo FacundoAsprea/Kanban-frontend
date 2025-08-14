@@ -12,7 +12,8 @@ import Loader from "@/components/loading";
 import { getAllTasks, updateTaskStatus } from "@/services/task.service";
 import type { TaskProps, TaskStatus } from "@/types/globals";
 
-const status: { status: TaskStatus; placeholder: string }[] = [ //List used for creating the columns
+const status: { status: TaskStatus; placeholder: string }[] = [
+  //List used for creating the columns
   {
     status: "notStarted",
     placeholder: "Not started",
@@ -40,7 +41,9 @@ export default function Kanban() {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredTasks = tasks.filter(task => task.title.includes(searchQuery))
+  const filteredTasks = tasks.filter((task) =>
+    task.title.includes(searchQuery)
+  );
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -50,37 +53,44 @@ export default function Kanban() {
     const taskId = active.id;
     const columnStatus = over.id;
 
-    const tasksAfterDrag = tasks.map((task) =>                //List of tasks with the changes applied
-      task.taskId === taskId
-        ? ({ ...task, status: columnStatus } as TaskProps)
-        : task
+    const tasksAfterDrag = tasks.map(
+      (
+        task //List of tasks with the changes applied
+      ) =>
+        task.taskId === taskId
+          ? ({ ...task, status: columnStatus } as TaskProps)
+          : task
     );
-    setTasks(tasksAfterDrag);                                 //UI Update
-    updateTaskStatus(                                         //DB Update
+    setTasks(tasksAfterDrag); //UI Update
+    updateTaskStatus(
+      //DB Update
       tasks.find((task) => task.taskId === taskId)!,
       columnStatus as TaskStatus
     );
   };
 
-  //Getting the data
-  useEffect(() => {
-    const backendWaiting = setInterval(() => {
-      getAllTasks()
+  const getData = () => {
+    getAllTasks()
       .then((res) => {
         setTasks(res.data);
         setLoading(false);
-
-        clearInterval(backendWaiting)
         console.log("Connection with the backend established");
       })
-      .catch(() => console.log("Waiting for the backend..."))
-    }, 1000);
+      .catch(() => {
+        console.log("Waiting for the backend...")
+        getData()                                 //If the backend doesnt answer, then recall the function
+      });
+  };
+
+  //Getting the data
+  useEffect(() => {
+    getData()
   }, []);
 
   return (
     <main className="flex flex-col gap-3 text-sm">
       <div className="flex w-full justify-between items-center">
-        <h1 className="text-muted-foreground text-5xl">Kanban</h1>
+        <h1 className="text-blue-500 text-5xl">k<strong className="text-white">ARG</strong>ban</h1>
         <TaskCreator setTasks={setTasks} />
       </div>
       <div className="flex justify-between w-full h-full">

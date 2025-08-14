@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { TaskProps, TaskStatus } from "@/types/globals";
-const url = "https://kanban-backend-6pkr.onrender.com"
+const url = "https://kanban-backend-6pkr.onrender.com" 
 
 const getAllTasks = async () => {
   return axios.get(`${url}/tasks`);
