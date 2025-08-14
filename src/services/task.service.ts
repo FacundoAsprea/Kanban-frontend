@@ -37,7 +37,6 @@ const updateTaskStatus = async (task: TaskProps, status: TaskStatus) => {
   };
   return axios
     .put(`${url}/tasks/${task.taskId}`, modifiedTask)
-    .then((res) => console.log("status modified: ", res));
 };
 
 export { createTask, getAllTasks, deleteTask, updateTaskStatus };

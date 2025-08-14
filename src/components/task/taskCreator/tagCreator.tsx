@@ -35,13 +35,9 @@ export default function TaskCreator() {
     event.preventDefault();
 
     const pickedTag = { tagTitle: title, color: color };
-    console.log("picked: ", pickedTag)
     
     //evitar duplicados
     if (task.tags.some(tag => tag.tagTitle == pickedTag.tagTitle)) {
-      console.log("no dupes")
-      console.log("picked: ", pickedTag.tagTitle)
-      console.log("tag: ", task.tags)
       return false;
     }
 
