@@ -18,7 +18,7 @@ const Loader = () => (
         />
       </svg>
     </div>
-    <span className="text-white">Waiting for the backend (Can take up to 25 secs)</span>
+    <span className="text-white">Waiting for the backend (Can take up to 1 minute)</span>
   </div>
 );
 
